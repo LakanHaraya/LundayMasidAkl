@@ -16,19 +16,26 @@ public:
     LundayMasid(Stream &stream);
 
     void log(uint8_t level, const char *message);
+    void setMinimumLevel(uint8_t level); // <<<< New: Set minimum log level
+    void flush();
 
-    // Shorthand methods para sa bawat severity level
-    void emergency(const char *message);
-    void alert(const char *message);
-    void critical(const char *message);
-    void error(const char *message);
-    void warning(const char *message);
-    void notice(const char *message);
-    void info(const char *message);
-    void debug(const char *message);
+    // Macros para sa shorthand methods
+    #define DEFINE_LOG_METHOD(NAME, LEVEL) \
+        void NAME(const char *message) { log(LEVEL, message); }
+
+    // Magagamit ang mga shorthand methods na ito
+    DEFINE_LOG_METHOD(emergency, EMERGENCY)
+    DEFINE_LOG_METHOD(alert, ALERT)
+    DEFINE_LOG_METHOD(critical, CRITICAL)
+    DEFINE_LOG_METHOD(error, ERROR)
+    DEFINE_LOG_METHOD(warning, WARNING)
+    DEFINE_LOG_METHOD(notice, NOTICE)
+    DEFINE_LOG_METHOD(info, INFO)
+    DEFINE_LOG_METHOD(debug, DEBUG)
 
 private:
     Stream *_stream;
+    uint8_t _filterLevel = DEBUG;  // <<<< New: Default to most verbose
 
     const char *levelToText(uint8_t level);
 };
