@@ -3,7 +3,7 @@
 
 class LundayMasid {
 public:
-    // Severity levels batay sa RFC 5424
+    // Antas ng kalubhaan batay sa RFC 5424
     static const uint8_t EMERGENCY = 0;
     static const uint8_t ALERT     = 1;
     static const uint8_t CRITICAL  = 2;
@@ -13,7 +13,7 @@ public:
     static const uint8_t INFO      = 6;
     static const uint8_t DEBUG     = 7;
 
-    // Facility codes para sa LundayHangin (pinasadyang proyekto)
+    // Sagisag ng pasilidad para sa LundayHangin (pinasadyang proyekto)
     static const uint8_t FACILITY_USER     = 1;   // User-level messages (Operasyon ng sasakyan)
     static const uint8_t FACILITY_SYSTEM   = 3;   // System-level messages (Hardware issues, system status)
     static const uint8_t FACILITY_INTERNAL = 5;   // Internal system diagnostics (Debugging, low-level status)
@@ -26,11 +26,12 @@ public:
     static const uint8_t FACILITY_LOCAL6   = 22;  // Custom subsystem: Safety and fail-safe
     static const uint8_t FACILITY_LOCAL7   = 23;  // Custom subsystem: Auxiliary functions (e.g., camera, lighting)
 
-    LundayMasid(Stream &stream, uint8_t facility = FACILITY_LOCAL0);
+    LundayMasid(Stream &stream, uint8_t facility = FACILITY_INTERNAL);
 
     void log(uint8_t level, const char *message);
     void setMinimumLevel(uint8_t level);
     void flush();
+    void setFacility(uint8_t facility);
 
     // Shorthand methods
     #define DEFINE_LOG_METHOD(NAME, LEVEL) \

@@ -1,8 +1,8 @@
 #include "LundayMasid.h"
 
-LundayMasid::LundayMasid(Stream &stream, uint8_t facillity) {
+LundayMasid::LundayMasid(Stream &stream, uint8_t facility) {
     _stream = &stream;
-    _facility = facillity;
+    _facility = facility;
 }
 
 void LundayMasid::setMinimumLevel(uint8_t level) {
@@ -14,13 +14,16 @@ void LundayMasid::log(uint8_t level, const char *message) {
 
     int pri = computePRI(_facility, level);
 
-    // Output format: <PRI>[TIMESTAMP][LEVEL] message
+    // Output format: <PRI>[TIMESTAMP][FACILITY][LEVEL] message
     _stream->print("<");
     _stream->print(pri);
     _stream->print(">");
-    _stream->print("[");        // Placeholder for timestamp
-    _stream->print(millis());   // Placeholder for timestamp
-    _stream->print("ms]");        // Placeholder for timestamp
+    _stream->print(" [");  
+    _stream->print(millis());  
+    _stream->print("ms]");      
+    _stream->print(" [");
+    _stream->print(facilityToText(_facility));
+    _stream->print("] ");
     _stream->print("[");
     _stream->print(levelToText(level));
     _stream->print("] ");
@@ -31,34 +34,38 @@ void LundayMasid::flush() {
     _stream->flush();
 }
 
+void LundayMasid::setFacility(uint8_t facility) {
+    _facility = facility;
+}
+
 const char *LundayMasid::levelToText(uint8_t level) const {
     switch (level) {
-        case EMERGENCY: return "KAGIPITAN";
-        case ALERT:     return "ALERTO";
-        case CRITICAL:  return "KRITIKAL";
-        case ERROR:     return "KAMALIAN";
-        case WARNING:   return "BABALA";
-        case NOTICE:    return "PANSIN";
+        case EMERGENCY: return "KAGI";
+        case ALERT:     return "ALRT";
+        case CRITICAL:  return "KRIT";
+        case ERROR:     return "MALI";
+        case WARNING:   return "BALA";
+        case NOTICE:    return "PNSN";
         case INFO:      return "IMPO";
-        case DEBUG:     return "DALISAP";
-        default:        return "DI-BATID";
+        case DEBUG:     return "DALI";
+        default:        return "DBTD";
     }
 }
 
 const char *LundayMasid::facilityToText(uint8_t facility) const {
     switch (facility) {
-        case FACILITY_USER:     return "TAGAGAMIT";
-        case FACILITY_SYSTEM:   return "SISTEMA";
-        case FACILITY_INTERNAL: return "PANLOOB";
-        case FACILITY_LOCAL0:   return "NABEGASYON";
-        case FACILITY_LOCAL1:   return "ANGKLA";
-        case FACILITY_LOCAL2:   return "KONTROLER LIPAD";
-        case FACILITY_LOCAL3:   return "KOMUNIKASYON";
-        case FACILITY_LOCAL4:   return "LAKAS";
-        case FACILITY_LOCAL5:   return "PANDAMA";
-        case FACILITY_LOCAL6:   return "KALIGTASAN";
-        case FACILITY_LOCAL7:   return "KATUWANG";
-        default:                return "DI-BATID";
+        case FACILITY_USER:     return "TGGA";
+        case FACILITY_SYSTEM:   return "SIST";
+        case FACILITY_INTERNAL: return "LOOB";
+        case FACILITY_LOCAL0:   return "NABE";
+        case FACILITY_LOCAL1:   return "ANGK";
+        case FACILITY_LOCAL2:   return "KNTR";
+        case FACILITY_LOCAL3:   return "KOMU";
+        case FACILITY_LOCAL4:   return "LKAS";
+        case FACILITY_LOCAL5:   return "DAMA";
+        case FACILITY_LOCAL6:   return "KALI";
+        case FACILITY_LOCAL7:   return "KATU";
+        default:                return "DBTD";
     }
 }
 
